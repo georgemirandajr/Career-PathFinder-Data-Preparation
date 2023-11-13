@@ -1,0 +1,87 @@
+---
+title: "Documentation for Career PathFinder Data Cleaning"
+author: "Workforce and Employee Development Division"
+date: "February 26, 2018"
+output: html_document
+---
+
+### Purpose
+
+The purpose of this application is to prepare the data for use in the Career PathFinder tool. 
+The included scripts import data from the 'data' folder, apply cleaning rules, create item pairs, and export to a folder called 'output' within the application folder. 
+
+This application contains the following folders:
+
+1. __data__ - historical data are stored here (i.e., CWTAPPS and Advantage data). These are the inputs.
+2. __functions__ - DO NOT TOUCH. Custom functions are stored here. These clean the data, make the item pairs, and produce statistics on the data.
+3. __output__ - the final datasets are exported here. These are to be used in the Career PathFinder tool.
+4. __library__ - DO NOT TOUCH. The R packages that are needed to process the R scripts are stored here. 
+5. __log__ - if there is ever an error or bug in the application, you may access the error log to deduce what happened.
+6. __utils__ - DO NOT TOUCH. Files that make the application work are stored here.
+7. __www__ - DO NOT TOUCH. The CSS file for the application is stored here.
+
+### How To Use This Folder:
+Update the data for the Career PathFinder tool by following these steps:
+
+1. Delete the old text files in the 'data' folder (i.e., EMPL_JPACT_EXTR, PAY_POLICY_RATE, TITLE_Reference_Extract)
+2. Drop in new data in the 'data' folder (i.e., EMPL_JPACT_EXTR, PAY_POLICY_RATE, TITLE_Reference_Extract)
+3. Open the application and click, "Clean Data".
+4. You will see a table of statistics about the data when the scripts are done. Go to the 'output' folder and copy/paste all of the needed files to the location of the Career PathFinder tool (separate folder to be determined later).
+5. Have a cup of coffee; you did a good job.
+
+### Behind the Scenes:
+The DataCleaningScript.R makes use of clean_careers.R to process the system-extracted text files by applying the following data cleaning rules:
+
+1. Delete expired classifications (using the "EXPIRED" keyword in the TITLE_Reference_Extract)
+2. Delete multiple lateral transfers
+3. Delete lateral transfers within 30 days
+4. Delete demotions that are beyond 5.5% decrease in salary
+
+Once the data rules have been applied, DataCleaningScript.R calls the functions make_pairs.R and make_pairs_rev.R. 
+These functions create the final datasets containing summarized career movements. 
+The forward and backward item pairings for 30 and 15 year datasets are exported to the 'output' folder.
+
+### Other Noteworthy Directory Contents
+
+* DataCleaningScript.R (_the main script that is called by the application_)
+* readme.html  (_these instructions_)
+* readme.Rmd  (_the script that created these instructions_) 
+* unins000 (_uninstall the application in case of an update_)
+* server.R (_the application logic_)
+* ui.R (_the application layout_)
+
+#### Sub-directories
+
+#### Functions
+* clean_careers.R
+* make_pairs.R
+* make_pairs_rev.R
+* statFunctions.R  # needed for creating stats
+
+#### Data
+* job_extract_specs.xlsx  # extract specs define how the text files are imported
+* title_reference_specs.xlsx 
+* pprt_reference_specs.xlsx
+* taps.RDS  # static data from CWTAPPS
+* EMPL_JPACT_EXTR_COUNTYWIDE_YYYYMMDD.txt (replace these text files with updated data)
+* PAY_POLICY_RATE_Reference_Extract.txt  (replace)
+* TITLE_Reference_Extract.txt  (replace)
+
+#### Output
+The output files are provided in two (2) formats: CSV and R data. It may be 
+possible to add different output formats as needed. 
+  
+__CSV__
+  
+* Item_Pairs_30.csv
+* Item_Pairs_30_rev.csv
+* Item_Pairs_15.csv
+* Item_Pairs_15_rev.csv
+  
+__R Data__
+  
+* item_pairs_30.rda
+* item_pairs_30_rev.rda
+* item_pairs_15.rda
+* item_pairs_15_rev.rda
+
